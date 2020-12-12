@@ -3,7 +3,7 @@ import { videoFrameX } from '../data/video';
 
 interface videoInterface {
   getMetaDataVideo(): Promise<videoFrameX>;
-  getImageVideoByFrame(name: string, frameNumber: number): Promise<any>;
+  getUrlImageVideoByFrame(name: string, frameNumber: number): string;
 }
 
 class VideoList implements videoInterface {
@@ -16,9 +16,8 @@ class VideoList implements videoInterface {
     return data[0] as videoFrameX;
   }
 
-  public async getImageVideoByFrame(url: string, frameNumber: number): Promise<any> {
-    const { data } = await axios.get(`${this.queryParamsTakeOut(url)}/frame/${frameNumber}/`);
-    return data;
+  public getUrlImageVideoByFrame(url: string, frameNumber: number): string {
+    return `${this.queryParamsTakeOut(url)}frame/${frameNumber}/`;
   }
 
   private queryParamsTakeOut(url: string): string {

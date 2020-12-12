@@ -7,9 +7,9 @@ class RocketManager {
   public async getRocketImage(): Promise<imageData> {
     const metaVideo: videoFrameX = await videoListService.getMetaDataVideo();
     const bisectFrame: number = rocketModel.bisectionCalculateFrame(metaVideo.frames, 0);
-    const image: any = await videoListService.getImageVideoByFrame(metaVideo.url, bisectFrame);
+    const urlImage: string = videoListService.getUrlImageVideoByFrame(metaVideo.url, bisectFrame);
     return {
-      image,
+      urlImage,
       max: metaVideo.frames,
       min: 0,
       timeAsked: 0,
@@ -29,7 +29,7 @@ class RocketManager {
       dataCopy.max = imgData.currentFrame;
       dataCopy.currentFrame = rocketModel.bisectionCalculateFrame(imgData.currentFrame, imgData.min) + imgData.min;
     }
-    dataCopy.image = videoListService.getImageVideoByFrame(dataCopy.url, dataCopy.currentFrame);
+    dataCopy.urlImage = videoListService.getUrlImageVideoByFrame(dataCopy.url, dataCopy.currentFrame);
     dataCopy.timeAsked = ++dataCopy.timeAsked;
 
     return dataCopy;
