@@ -1,6 +1,6 @@
 import { resolveSoa } from 'dns';
 import { Request, Response } from 'express';
-import { imageData } from '../../../data/image-data';
+import { imageData } from '../data/image-data';
 import rocketManager from '../manager/rocket.manager';
 
 class RocketController {

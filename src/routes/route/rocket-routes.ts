@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import rocketController from '../../features/rocket/controller/rocket.controller';
+import rocketController from '../../controller/rocket.controller';
 
 const rocketRoutes = Router();
 
