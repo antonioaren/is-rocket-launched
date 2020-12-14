@@ -29,12 +29,12 @@ class TelegramBotRepository {
 
   public async mainConversation(bot: TelegramBot, msg: TelegramBot.Message) {
     const chatId = msg.chat.id;
-    if (msg.text === '/start') return;
-    if (msg.text !== 'yes' && msg.text !== 'no') {
+    if (msg.text?.toLocaleLowerCase() === '/start') return;
+    if (msg.text?.toLocaleLowerCase() !== 'yes' && msg.text !== 'no') {
       return bot.sendMessage(chatId, 'Has the rocket been launched? yes or no');
     }
     const imgData = await FirebaseDatabaseRepository.getOne<dataImage>('/chats', chatId.toString());
-    imgData.isRocketLaunched = msg.text === 'yes' ? true : false;
+    imgData.isRocketLaunched = msg.text.toLocaleLowerCase() === 'yes' ? true : false;
     const imageData = await rocketManager.getNextImage(imgData);
     FirebaseDatabaseRepository.set('chats', chatId.toString(), imageData);
 
