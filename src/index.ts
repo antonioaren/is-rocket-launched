@@ -11,7 +11,6 @@ dotenv.config();
 const app = express();
 app.use(bodyParser.json());
 
-console.log('INICIALIZO FIREBASE');
 
 admin.initializeApp({
   credential: admin.credential.cert('src/environment/firebase/with-madrid-test-firebase-adminsdk.json'),
