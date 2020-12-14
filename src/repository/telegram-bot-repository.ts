@@ -12,6 +12,12 @@ class TelegramBotRepository {
     bot.onText(/^\/start/, async msg => {
       await this.startConversation(bot, msg);
     });
+    
+    bot.onText(/^\/restart/, async msg => {
+      const chatId = msg.chat.id;
+      FirebaseDatabaseRepository.delete('/chats', chatId.toString());
+      await this.startConversation(bot, msg);
+    });
 
     bot.on('message', async msg => {
       await this.mainConversation(bot, msg);
@@ -30,7 +36,7 @@ class TelegramBotRepository {
   public async mainConversation(bot: TelegramBot, msg: TelegramBot.Message) {
     const chatId = msg.chat.id;
     if (msg.text?.toLocaleLowerCase() === '/start') return;
-    if (msg.text?.toLocaleLowerCase() !== 'yes' && msg.text !== 'no') {
+    if (msg.text?.toLocaleLowerCase() !== 'yes' && msg.text?.toLocaleLowerCase() !== 'no') {
       return bot.sendMessage(chatId, 'Has the rocket been launched? yes or no');
     }
     const imgData = await FirebaseDatabaseRepository.getOne<dataImage>('/chats', chatId.toString());
