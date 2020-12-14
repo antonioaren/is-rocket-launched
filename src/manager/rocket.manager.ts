@@ -1,7 +1,7 @@
-import { imageData } from '../../../data/image-data';
-import { videoFrameX } from '../../../data/video';
-import videoListService from '../../../services/video-list.service';
+import { imageData } from '../data/image-data';
+import { videoFrameX } from '../data/video';
 import rocketModel from '../model/rocket.model';
+import videoListService from '../services/video-list.service';
 
 class RocketManager {
   public async getRocketImage(): Promise<imageData> {

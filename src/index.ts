@@ -1,23 +1,34 @@
 import express from 'express';
 import dotenv from 'dotenv';
-dotenv.config();
 import bodyParser from 'body-parser';
+import * as admin from 'firebase-admin';
 import TelegramBot from 'node-telegram-bot-api';
 import rocketManager from './manager/rocket.manager';
+import FirebaseDatabaseRepository from './repository/firebase-realtime-db.repository';
+
 // import apiRoutes from './routes';
+dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
 
-
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN as string, { polling: true });
+
+admin.initializeApp({
+  credential: admin.credential.cert('src/environment/firebase/with-madrid-test-firebase-adminsdk.json'),
+  databaseURL: 'https://with-madrid-test-default-rtdb.firebaseio.com',
+});
+
+
 
 bot.onText(/^\/start/, async msg => {
   var chatId = msg.chat.id;
   bot.sendMessage(chatId, 'Hello, ' + 'We gonna start a little game to know if rocket has launched!🚀');
-  const data = await rocketManager.getRocketImage();
+  const imageData = await rocketManager.getRocketImage();
   //set en la base de datos
-  await bot.sendPhoto(chatId, data.urlImage);
+  FirebaseDatabaseRepository.set('chats', chatId.toString(), imageData);
+
+  await bot.sendPhoto(chatId, imageData.urlImage);
   bot.sendMessage(chatId, 'Has Rocket been launched? yes or no');
 });
 
@@ -36,8 +47,6 @@ bot.on('message', msg => {
     bot.sendMessage(chatId, 'Has Rocket been launched? yes or no');
   }
 });
-
-// app.use('/api', apiRoutes);
 
 //TODO: Add a env to do not leave this.
 app.listen(process.env.PORT, () => {
