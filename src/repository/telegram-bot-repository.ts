@@ -10,33 +10,45 @@ class TelegramBotRepository {
     const bot = new TelegramBot(process.env.TELEGRAM_TOKEN as string, { polling: true });
 
     bot.onText(/^\/start/, async msg => {
-      var chatId = msg.chat.id;
-      bot.sendMessage(chatId, 'Hello!!!, We gonna start a little game to know when the rocket has been launched!🚀');
-      const imageData = await rocketManager.getRocketImage();
-      FirebaseDatabaseRepository.set('chats', chatId.toString(), imageData);
-      await bot.sendPhoto(chatId, imageData.urlImage);
-      bot.sendMessage(chatId, 'Has the rocket been launched? yes or no');
+      await this.startConversation(bot, msg);
     });
 
     bot.on('message', async msg => {
-      const chatId = msg.chat.id;
-      if (msg.text === '/start') return;
-      if (msg.text !== 'yes' && msg.text !== 'no') {
-        return bot.sendMessage(chatId, 'Has the rocket been launched? yes or no');
-      }
-      const imgData = await FirebaseDatabaseRepository.getOne<dataImage>('/chats', chatId.toString());
-      imgData.isRocketLaunched = msg.text === 'yes' ? true : false;
-      const imageData = await rocketManager.getNextImage(imgData);
-      FirebaseDatabaseRepository.set('chats', chatId.toString(), imageData);
-
-      await bot.sendPhoto(chatId, imageData.urlImage);
-      if (imgData.timeAsked !== 15) {
-        bot.sendMessage(chatId, 'Has The Rocket been launched? yes or no');
-      } else {
-        bot.sendMessage(chatId, `Congratulations 🙌 🚀!!! Found Take-off!!! at ${imgData.currentFrame}`);
-        FirebaseDatabaseRepository.delete('/chats', chatId.toString());
-      }
+      await this.mainConversation(bot, msg);
     });
+  }
+
+  public async startConversation(bot: TelegramBot, msg: TelegramBot.Message) {
+    var chatId = msg.chat.id;
+    bot.sendMessage(chatId, 'Hello!!!, We gonna start a little game to know when the rocket has been launched!🚀');
+    const imageData = await rocketManager.getRocketImage();
+    FirebaseDatabaseRepository.set('chats', chatId.toString(), imageData);
+    await bot.sendPhoto(chatId, imageData.urlImage);
+    bot.sendMessage(chatId, 'Has the rocket been launched? yes or no');
+  }
+
+  public async mainConversation(bot: TelegramBot, msg: TelegramBot.Message) {
+    const chatId = msg.chat.id;
+    if (msg.text === '/start') return;
+    if (msg.text !== 'yes' && msg.text !== 'no') {
+      return bot.sendMessage(chatId, 'Has the rocket been launched? yes or no');
+    }
+    const imgData = await FirebaseDatabaseRepository.getOne<dataImage>('/chats', chatId.toString());
+    imgData.isRocketLaunched = msg.text === 'yes' ? true : false;
+    const imageData = await rocketManager.getNextImage(imgData);
+    FirebaseDatabaseRepository.set('chats', chatId.toString(), imageData);
+
+    await bot.sendPhoto(chatId, imageData.urlImage);
+    this.sendFinalTextPart(bot, imgData, chatId);
+  }
+
+  public sendFinalTextPart(bot: TelegramBot, imgData: dataImage, chatId: number) {
+    if (imgData.timeAsked !== 15) {
+      bot.sendMessage(chatId, 'Has The Rocket been launched? yes or no');
+    } else {
+      bot.sendMessage(chatId, `Congratulations 🙌 🚀!!! Found Take-off!!! at ${imgData.currentFrame}`);
+      FirebaseDatabaseRepository.delete('/chats', chatId.toString());
+    }
   }
 }
 
