@@ -1,6 +1,6 @@
 class RocketModel {
   bisectionCalculateFrame(max: number, min: number) {
-    return (max - min) / 2;
+    return Math.round((max - min) / 2);
   }
 }
 

@@ -1,10 +1,10 @@
-import { imageData } from '../data/image-data';
+import { dataImage } from '../data/image-data';
 import { videoFrameX } from '../data/video';
 import rocketModel from '../model/rocket.model';
 import videoListService from '../services/video-list.service';
 
 class RocketManager {
-  public async getRocketImage(): Promise<imageData> {
+  public async getRocketImage(): Promise<dataImage> {
     const metaVideo: videoFrameX = await videoListService.getMetaDataVideo();
     const bisectFrame: number = rocketModel.bisectionCalculateFrame(metaVideo.frames, 0);
     const urlImage: string = videoListService.getUrlImageVideoByFrame(metaVideo.url, bisectFrame);
@@ -18,8 +18,8 @@ class RocketManager {
     };
   }
 
-  public async getNextImage(imgData: imageData) {
-    const dataCopy: imageData = JSON.parse(JSON.stringify(imgData));
+  public async getNextImage(imgData: dataImage) {
+    const dataCopy: dataImage = JSON.parse(JSON.stringify(imgData));
     if (!imgData.isRocketLaunched) {
       dataCopy.min = imgData.currentFrame;
       dataCopy.max = imgData.max;

@@ -1,5 +1,5 @@
-export interface imageData {
-  urlImage: any;
+export interface dataImage {
+  urlImage: string;
   max: number;
   min: number;
   currentFrame: number;
