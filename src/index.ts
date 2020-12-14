@@ -1,4 +1,6 @@
 import express from 'express';
+import dotenv from 'dotenv';
+dotenv.config();
 import bodyParser from 'body-parser';
 import TelegramBot from 'node-telegram-bot-api';
 import rocketManager from './manager/rocket.manager';
@@ -7,13 +9,14 @@ import rocketManager from './manager/rocket.manager';
 const app = express();
 app.use(bodyParser.json());
 
-const TOKEN = '1478607319:AAH_Lm8v46EhXtcTV5tNVJT8jb45GIKs5GY';
-const bot = new TelegramBot(TOKEN, { polling: true });
+
+const bot = new TelegramBot(process.env.TELEGRAM_TOKEN as string, { polling: true });
 
 bot.onText(/^\/start/, async msg => {
   var chatId = msg.chat.id;
   bot.sendMessage(chatId, 'Hello, ' + 'We gonna start a little game to know if rocket has launched!🚀');
   const data = await rocketManager.getRocketImage();
+  //set en la base de datos
   await bot.sendPhoto(chatId, data.urlImage);
   bot.sendMessage(chatId, 'Has Rocket been launched? yes or no');
 });
@@ -23,7 +26,12 @@ bot.on('message', msg => {
   const chatId = msg.chat.id;
   console.log({ msg });
   if (msg.text === 'yes') {
+    //get en la base de datos de los datos
+    //Pedir siguiente
+    //set en la base de datos.
   } else if (msg.text === 'no') {
+    //Pedir los datos
+    //Pedir siguiente
   } else {
     bot.sendMessage(chatId, 'Has Rocket been launched? yes or no');
   }
@@ -32,6 +40,6 @@ bot.on('message', msg => {
 // app.use('/api', apiRoutes);
 
 //TODO: Add a env to do not leave this.
-app.listen(3000, () => {
-  console.log(`Connected to ${3000}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Connected to ${process.env.PORT}`);
 });
