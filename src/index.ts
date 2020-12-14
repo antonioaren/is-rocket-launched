@@ -11,9 +11,10 @@ dotenv.config();
 const app = express();
 app.use(bodyParser.json());
 
+//credential: admin.credential.cert('src/environment/firebase/with-madrid-test-firebase-adminsdk.json'),
 
 admin.initializeApp({
-  credential: admin.credential.cert('src/environment/firebase/with-madrid-test-firebase-adminsdk.json'),
+  credential: admin.credential.applicationDefault(),
   databaseURL: 'https://with-madrid-test-default-rtdb.firebaseio.com',
 });
 
