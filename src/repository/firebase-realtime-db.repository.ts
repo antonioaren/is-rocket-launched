@@ -26,14 +26,14 @@ class FirebaseDatabaseRepository {
     });
   }
 
-  public set(urlRouteEntity: string, id: string, data: {}) {
+  public set(urlRouteEntity: string, id: string, data: {}) : void{
     const db = admin.database();
     const ref = db.ref(urlRouteEntity);
     var pointer = ref.child(id);
     pointer.set(data);
   }
 
-  public delete(urlRouteEntity: string, id: string) {
+  public delete(urlRouteEntity: string, id: string) : void {
     const db = admin.database();
     const ref = db.ref(urlRouteEntity);
     var pointer = ref.child(id);

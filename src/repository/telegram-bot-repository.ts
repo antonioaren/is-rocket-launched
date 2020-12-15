@@ -8,6 +8,8 @@ class TelegramBotRepository {
 
   public initializaBot() {
     const bot = new TelegramBot(process.env.TELEGRAM_TOKEN as string, { polling: true });
+    
+    
 
     bot.onText(/^\/start/, async msg => {
       await this.startConversation(bot, msg);
@@ -18,6 +20,7 @@ class TelegramBotRepository {
       FirebaseDatabaseRepository.delete('/chats', chatId.toString());
       await this.startConversation(bot, msg);
     });
+
 
     bot.on('message', async msg => {
       await this.mainConversation(bot, msg);
