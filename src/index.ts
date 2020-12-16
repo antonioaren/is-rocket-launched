@@ -12,10 +12,16 @@ const app = express();
 app.use(bodyParser.json());
 
 // To keep heroku wake up, I will include a petition every 30 mins.
-
-setInterval(async (_) => {
+setInterval(async _ => {
+  console.log('I am still alive');
   Axios.get('https://launchedrocket.herokuapp.com/')
-}, 1800000)
+    .then(_ => {
+      console.log('I am still alive');
+    })
+    .catch(_ => {
+      console.log('I am still alive, but I can get nothing, remember it');
+    });
+}, 1800000);
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
