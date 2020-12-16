@@ -13,7 +13,6 @@ app.use(bodyParser.json());
 
 // To keep heroku wake up, I will include a petition every 30 mins.
 setInterval(async _ => {
-  console.log('I am still alive');
   Axios.get('https://launchedrocket.herokuapp.com/')
     .then(_ => {
       console.log('I am still alive');
