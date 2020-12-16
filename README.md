@@ -24,6 +24,9 @@ admin.initializeApp({
 });
 ```
 
+- I upload my API to Heroku, which is great because any change you want to do, just pushing changes, deploy automaticly to public server but
+There is a little problem. If you use Heroku free server, you machine will get to sleep every 30 min. To solve that I use this [Keep alive Heroku with Kaffeine](http://kaffeine.herokuapp.com/). This ping your website every 30 minutes to keep server awake, you must leave your app sleep 6 hours but you can choose when your app can go to bed! This is really useful for little projects.
+
 
 ### How to use
 
